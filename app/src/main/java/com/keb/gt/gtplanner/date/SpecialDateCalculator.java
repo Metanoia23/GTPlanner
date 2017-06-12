@@ -31,6 +31,9 @@ public final class SpecialDateCalculator {
         if (isHalloween(date)) {
             return PointInTime.HALLOWEEN;
         }
+        if (isEaster(date)) {
+            return PointInTime.EASTER;
+        }
         return PointInTime.EVERYTIME;
     }
 
@@ -86,7 +89,22 @@ public final class SpecialDateCalculator {
      * @return
      */
     public static boolean isMothersDay(Date date) {
-        return false;
+        GregorianCalendar gc = new GregorianCalendar();
+        gc.setTime(date);
+        gc.set(Calendar.MONTH, Calendar.MAY);
+        gc.set(Calendar.DAY_OF_MONTH, 1);
+
+        int dayOfWeek = gc.get(Calendar.DAY_OF_WEEK);
+        int firstSunday = 1;
+        if (dayOfWeek != Calendar.SUNDAY) {
+            firstSunday = 7 - dayOfWeek;
+        }
+        gc.set(Calendar.DAY_OF_MONTH, firstSunday);
+        gc.add(Calendar.DAY_OF_MONTH, 7);
+
+        GregorianCalendar gregorianCalendar = new GregorianCalendar();
+        gregorianCalendar.setTime(date);
+        return gc.equals(gregorianCalendar);
     }
 
     /**
@@ -95,13 +113,14 @@ public final class SpecialDateCalculator {
      * @return
      */
     public static boolean isEaster(Date date) {
-        Calendar cal = Calendar.getInstance();
+        GregorianCalendar cal = new GregorianCalendar();
         cal.setTime(date);
-        Calendar instance = Calendar.getInstance();
-        instance.set(cal.get(Calendar.YEAR), Calendar.MARCH, 20);
-//        instance.add(Calendar.DAY_OF_MONTH, -28);
-        Computus easterComputus = new Computus(cal.get(Calendar.YEAR));
-        Calendar easterDate = easterComputus.calcEasterDate();
+        Calendar easterDate = easterSunday(cal.get(Calendar.YEAR));
+//        Calendar instance = Calendar.getInstance();
+//        instance.set(cal.get(Calendar.YEAR), Calendar.MARCH, 20);
+////        instance.add(Calendar.DAY_OF_MONTH, -28);
+//        Computus easterComputus = new Computus(cal.get(Calendar.YEAR));
+//        Calendar easterDate = easterComputus.calcEasterDate();
         return date.equals(easterDate.getTime());
     }
 
@@ -135,6 +154,13 @@ public final class SpecialDateCalculator {
      * @return
      */
     public static boolean isSummer(Date date) {
+        GregorianCalendar gc = new GregorianCalendar();
+        gc.setTime(date);
+        if ((gc.get(Calendar.MONTH) == Calendar.JUNE)
+                || (gc.get(Calendar.MONTH) == Calendar.JULY)) {
+            return true;
+        }
+
         return false;
     }
 
