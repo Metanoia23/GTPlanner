@@ -1,5 +1,6 @@
 package com.keb.gt.gtplanner.api.plan;
 
+import com.keb.gt.gtplanner.api.StoryPlanner;
 import com.keb.gt.gtplanner.resource.Series;
 import com.keb.gt.gtplanner.resource.Story;
 import com.keb.gt.gtplanner.resource.StoryData;
@@ -8,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,8 +20,28 @@ import static org.junit.Assert.*;
  * Created by Manu on 06.02.2017.
  */
 public class PlannerTest {
+
+    private StoryPlanner planner;
+
     @Before
     public void setUp() throws Exception {
+        this.planner = Planner.getInstance();
+    }
+
+    @Test
+    public void getStarterStories1() throws Exception {
+        GregorianCalendar cal = new GregorianCalendar(2016,5,12);
+        List<String> starterStories = this.planner.getStarterStories();
+        assertEquals(7, starterStories.size());
+    }
+
+    @Test
+    public void currentStory1() throws Exception {
+
+    }
+
+    @Test
+    public void currentStory2() throws Exception {
 
     }
 

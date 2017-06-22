@@ -43,7 +43,9 @@ public class Planner implements StoryPlanner {
     public List<String> getStarterStories() {
         List<String> starterList = new LinkedList<>();
         for (Story story : this.planData) {
-            if (story.getType() == StoryType.BEGINNING) {
+//            if (story.getType() == StoryType.BEGINNING) {
+            if (story.getSeries() == Series.ANF1
+                    || story.getSeries() == Series.ANF2) {
                 starterList.add(story.getId());
             }
         }
