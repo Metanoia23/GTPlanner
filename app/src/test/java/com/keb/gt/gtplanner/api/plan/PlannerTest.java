@@ -52,13 +52,12 @@ public class PlannerTest {
         Map<Integer, List<Integer>> seriesCheckNumberToParts = new HashMap<>();
         for (Story story : stories) {
             if (story.isSeries()) {
-
                 List<Integer> parts = seriesCheckNumberToParts.get(story.getSeries().getNumber());
                 if (parts == null) {
                     parts = new ArrayList<>();
                 }
                 if (story.getPartOfSeries() > 0 &&
-                        story.getPartOfSeries() <= story.getSeries().getSeriesSize()) {
+                        (story.getPartOfSeries() <= story.getSeries().getSeriesSize())) {
                     if (parts.contains(story.getPartOfSeries())) {
                         throw new IllegalArgumentException("Incorrect numeration of series: " + story.getId());
                     } else {
@@ -71,8 +70,8 @@ public class PlannerTest {
             }
 
         }
-        // -1 because of the NO_SERIES ENTRY
-        assertEquals(Series.values().length -1, seriesCheckNumberToParts.size());
+        // -2 because of the NO_SERIES entry and Easter-Series not classified as series
+        assertEquals(Series.values().length -2, seriesCheckNumberToParts.size());
         for (Map.Entry<Integer, List<Integer>> entry : seriesCheckNumberToParts.entrySet()) {
             Series series = Series.getSeriesByNumber(entry.getKey());
             if (series != null) {

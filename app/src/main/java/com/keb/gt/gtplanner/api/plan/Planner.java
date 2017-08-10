@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -92,7 +93,8 @@ public class Planner implements StoryPlanner {
         if (timePointMatch.size() > 1) {
             return checkMatchingSeries(timePointMatch);
         }
-        return timePointMatch.iterator().next().getId();
+        Iterator<Story> iterator = timePointMatch.iterator();
+        return iterator.hasNext() ? iterator.next().getId() : null;
     }
 
     private String checkMatchingSeries(Set<Story> checkSeries) {
@@ -181,19 +183,32 @@ public class Planner implements StoryPlanner {
 
     private String chooseRandomStory(Set<Story> availableStories) {
         List<Story> setOfSingleStories = new ArrayList<>();
+        List<Story> setOfEverytimeSeries = new ArrayList<>();
         for (Story story : availableStories) {
             if (!story.isSeries()) {
                 setOfSingleStories.add(story);
+            } else {
+                if (story.getSpecialDate() == PointInTime.EVERYTIME) {
+                    setOfEverytimeSeries.add(story);
+                }
             }
         }
         int size = setOfSingleStories.size();
+        Random random = new Random();
         if (size < 1) {
+            if (setOfEverytimeSeries.size() > 0) {
+                int randIndex = random.nextInt((setOfEverytimeSeries.size() - 1) + 1);
+                List<Story> stories = filterSeries(setOfEverytimeSeries.get(randIndex).getSeries(),
+                        new HashSet<>(setOfEverytimeSeries));
+                if (!stories.isEmpty()) {
+                    return findCurrentPartOfSeries(stories);
+                }
+            }
             setOfSingleStories = new ArrayList<>(availableStories);
             size = setOfSingleStories.size();
         }
-        Random random = new Random();
-        int randomIndex = random.nextInt((size - 1) + 1);
 
+        int randomIndex = random.nextInt((size - 1) + 1);
         return setOfSingleStories.get(randomIndex).getId();
     }
 

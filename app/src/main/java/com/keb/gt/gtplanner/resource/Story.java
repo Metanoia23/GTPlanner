@@ -31,8 +31,8 @@ public class Story {
         this.type = type;
         this.series = series;
         this.partOfSeries = partOfSeries;
-        this.isSeries = (Series.NO_SERIES.equals(series) || Series.EASTER.equals(series))
-                                || series == null ? false : true;
+        this.isSeries = ((Series.NO_SERIES.equals(series) || Series.EASTER.equals(series))
+                                || series == null) ? false : true;
         this.specialDate = specialDate;
     }
 
